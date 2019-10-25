@@ -154,8 +154,8 @@ function notify_error {
     TO="$2"
     MESSAGE="$3"
 
-    echo_info "$MESSAGE"
     mailer "$SMTP_SERVER" "$FROM" "$TO" "TLS Certificate issue on $PROJECT" "$MESSAGE" "$sender_password"
+    echo_fail "$MESSAGE"
 }
 
 # This code expects the certificate being compared to be the same as the certificate
@@ -171,7 +171,6 @@ CONNECTION_ELEMENT="$(echo | openssl s_client -servername $HOST -connect $HOST:$
 # and the one provided to this script
 if [ "$CERTIFICATE_ELEMENT" != "$CONNECTION_ELEMENT" ]; then
     notify_error $SENDER $RECEIVER "Invalid certificate"
-    exit 1
 fi
 
 echo_info "Valid certificate"
@@ -193,7 +192,6 @@ echo_info "Expiration date: $EXPIRE_MONTH $EXPIRE_YEAR"
 
 if [ "$CURRENT_YEAR" -gt "$EXPIRE_YEAR" ]; then
     notify_error $SENDER $RECEIVER "Certificate for the host $HOST, used on $PROJECT already expired"
-    exit 1
 fi
 
 # This date calculation do not consider the day of the month, only the months itself
@@ -201,8 +199,6 @@ DATE_DIFF=$(( ($EXPIRE_YEAR - $CURRENT_YEAR) * 12 + (10#$EXPIRE_MONTH - 10#$CURR
 
 if [[ "$DATE_DIFF" -lt "$EXPIRATION_SPAN" || "$DATE_DIFF" -eq "$EXPIRATION_SPAN" ]]; then
     notify_error $SENDER $RECEIVER "The certificate for the host $HOST, used on $PROJECT is close to expire. ($DATE_DIFF months)"
-    exit 1
 else
-    echo_info "The certificate for the host $HOST, used on $PROJECT expires in $DATE_DIFF months"
-    exit 0
+    echo_done "The certificate for the host $HOST, used on $PROJECT expires in $DATE_DIFF months"
 fi
