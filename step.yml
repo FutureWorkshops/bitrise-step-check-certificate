@@ -1,0 +1,87 @@
+title: "Check certificate against host"
+summary: This step allows you to check a certificate against a host, and send an email in the case it is invalid.
+description: This step allows you to check a certificate against a host, and send an email in the case it is invalid.
+website: https://github.com/FutureWorkshops/bitrise-step-check-certificate
+source_code_url: https://github.com/FutureWorkshops/bitrise-step-check-certificate.git
+support_url: https://github.com/FutureWorkshops/bitrise-step-check-certificate/issues
+project_type_tags:
+  - ios
+  - macos
+  - android
+  - react-native
+  - xamarin
+type_tags:
+  - utility
+  - notification
+is_requires_admin_user: false
+is_always_run: false
+is_skippable: false
+deps:
+run_if: .IsCI
+inputs:
+  - smtp_server: ""
+    opts:
+      title: "SMTP server"
+      summary: "SMTP server used to send the notification email"
+      description: "SMTP server used to send the notification email"
+      is_expand: true
+      is_required: true
+  - sender_email: ""
+    opts:
+      title: "Sender email"
+      summary: "The email that will be used to send the error notification"
+      description: "In case that the certificate is invalid, this email will be used to send the notification email"
+      is_expand: true
+      is_required: true
+      is_sensitive: true
+  - sender_password: ""
+    opts:
+      title: "Sender password"
+      summary: "The password that will be used to authenticate the sender"
+      description: "The password that will be used to authenticate the sender"
+      is_expand: true
+      is_required: true
+      is_sensitive: true
+  - certificate_file: ""
+    opts:
+      title: "Certificate file path"
+      summary: "The path to the certificate file that will be used to check"
+      description: "The path to the certificate file that will be used to check"
+      is_expand: true
+      is_required: true
+  - host: ""
+    opts:
+      title: "Server host"
+      summary: "Host of the server that will be validated against"
+      description: "Host of the server that will be validated against"
+      is_expand: true
+      is_required: true
+  - port: "443"
+    opts:
+      title: "Server port"
+      summary: "Port of the server that will be validated against"
+      description: "Port of the server that will be validated against"
+      is_expand: true
+      is_required: true
+  - validation: "3"
+    opts:
+      title: "Number of months were the certificate becomes invalid"
+      summary: "Number of months were the certificate becomes invalid"
+      description: "Number of months were the certificate becomes invalid"
+      is_expand: true
+      is_required: true
+  - notification_target: ""
+    opts:
+      title: "Email to notify"
+      summary: "Email that will receive the notification in the case of an invalid certificate"
+      description: "Email that will receive the notification in the case of an invalid certificate"
+      is_expand: true
+      is_required: true
+  - project: ""
+    opts:
+      title: "Project name"
+      summary: "Name of the project were this certificate is used"
+      description: "Name of the project were this certificate is used. This is used in the notification email to give more context"
+      is_expand: true
+      is_required: false
+outputs:
